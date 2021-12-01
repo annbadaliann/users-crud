@@ -1,15 +1,13 @@
 import {Action, combineReducers, configureStore} from '@reduxjs/toolkit';
 import appReducer from './slicers/app';
 import authReducer from './slicers/auth';
-import mentorReducer from './slicers/mentors';
-import commonReducer from './slicers/common';
+import mentorReducer from './slicers/users';
 import errorHandling from './middlewares/errorHandle';
 
 const combinedReducers = combineReducers({
   app: appReducer,
-  mentors: mentorReducer,
+  users: mentorReducer,
   auth: authReducer,
-  common: commonReducer,
 });
 
 const rootReducer = (state: any | undefined, action: Action) =>

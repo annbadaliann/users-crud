@@ -7,14 +7,11 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
 import McButton from "../../shared/components/Button";
-import { registerUser, selectUser } from "../../store/slicers/auth";
+import { loginUser, registerUser, selectUser } from "../../store/slicers/auth";
 
 import { ESteps } from "../../shared/models/Interfaces/auth";
 import { AppDispatch } from "../../store";
-import {
-  selectSelectedMentors,
-  selectSuggestedMentors,
-} from "../../store/slicers/mentors";
+
 import { IUser } from "../../store/models/interfaces/user";
 
 import { ILocation } from "./model";
@@ -41,9 +38,14 @@ function Register() {
 
   const onSubmit = useCallback(
     async (data: IUser) => {
-      const form = user || data;
-      await dispatch(registerUser({ ...form }));
-      history.push("/home");
+      const { meta, payload } = await dispatch(loginUser(data));
+      
+
+      if (meta.requestStatus !== "fulfilled") {
+        return;
+      }
+      localStorage.setItem('token', payload.token)
+      history.push("/users");
     },
     [dispatch, history]
   );

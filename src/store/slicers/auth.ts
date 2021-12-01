@@ -1,31 +1,29 @@
-import { IUser } from './../models/interfaces/user';
+import { IUser } from "./../models/interfaces/user";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { EBaseUrl } from "../models/enums/env.enum";
 import { api } from "../utils";
+import { BASE_URL } from "../../config";
 
 const initialState: any = {
-  user: null,
+  isAuthenticated: !!localStorage.getItem("token"),
 };
 
-const name = "auth";
+const name = "login";
 
-export const registerUser = createAsyncThunk(`${name}/getMentors`, async (data: IUser) => {
-  return api({
-    method: "POST",
-    url: `${EBaseUrl.mainUrl}/users`,
-    body: data
-  });
-});
+export const loginUser = createAsyncThunk(
+  `${name}/login`,
+  async (data: IUser) => {
+    return api({
+      method: "POST",
+      url: `${BASE_URL}/login`,
+      body: data,
+    });
+  }
+);
 
 const authSlice = createSlice({
   name,
   initialState,
   reducers: {},
-  extraReducers: (builder) => {
-    builder.addCase(registerUser.fulfilled, (state, { payload }) => {
-      state.user = payload;
-    });
-  },
 });
 
 export const selectUser = (state: any) => state.auth.user;

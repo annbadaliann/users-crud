@@ -1,10 +1,12 @@
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import Container from "@mui/material/Container";
-import { Theme } from "@mui/material";
+import { IconButton, Theme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 import Logo from "../../assets/images/logo.png";
+import { Box } from "@mui/system";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -20,13 +22,21 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Header = (): JSX.Element => {
   const classes = useStyles();
+  const history = useHistory();
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    history.push('/login')
+  }
 
   return (
     <header className={classes.header}>
       <Container>
-        <Link to="/home">
-          {/* <img src={Logo} alt="logo" className={classes.logo} /> */}
-        </Link>
+        <Box display="flex" justifyContent="flex-end">
+          <IconButton onClick={logout}>
+            <ExitToAppIcon color="primary"/>
+          </IconButton>
+        </Box>
       </Container>
     </header>
   );

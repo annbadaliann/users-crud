@@ -1,15 +1,13 @@
-import { useEffect, useState } from "react";
-
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Checkbox from "@mui/material/Checkbox";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
-import { useDispatch } from "react-redux";
-import { setSelectedMentors } from "../../store/slicers/mentors";
+
+import { Pagination, PaginationItem } from "@mui/material";
+import { useCallback } from "react";
 
 interface IColumn {
   title: string;
@@ -27,69 +25,84 @@ interface IMcTableProps {
   isSelectable?: boolean;
 }
 
+interface IPagination {
+  count?: number;
+  page: number | undefined;
+  handleChange: (_: unknown, pageNumber: number) => Promise<void>;
+}
+
+const TablePagination = ({
+  count,
+  page,
+  handleChange,
+  rowsPerPage,
+}: IPagination) => {
+  return (
+    <Pagination
+      count={count}
+      page={page}
+      rowsPerPage={rowsPerPage}
+      onChange={handleChange}
+      shape="rounded"
+      renderItem={(item) => <PaginationItem {...item} />}
+    />
+  );
+};
+
+const generateValue = (value: string | any, col: IColumn) => {
+  if (col.format && col.format === EGridColumnFormat.date && value) {
+    return moment(value).format("L"); // todo create helper function date formater
+  }
+  return value;
+};
+
 const McTable = ({
   rows,
   columns,
-  disableCheckbox = false,
-  isSelectable = false,
+  pageChangeCallback,
+  paginationDetails,
 }: IMcTableProps) => {
-  const [selectableRows, setSelectableRows] = useState<IRow[]>([]);
-  const dispatch = useDispatch();
+  console.log(paginationDetails, "paginationDetails");
 
-  useEffect(() => {
-    if (rows?.length) {
-      setSelectableRows(rows);
-      const selectedRows = rows.filter((item: IRow) => item.isSelected);
-      dispatch(setSelectedMentors(selectedRows));
-    }
-  }, [dispatch, rows]);
-
-  const handleSelectRow = (id: string) => {
-    const rows = [...selectableRows];
-    const row = selectableRows.find((item) => item.id === id);
-    const newRows = rows.map((item) => {
-      return {
-        ...item,
-        isSelected: item.id === row.id ? !item.isSelected : item.isSelected,
-      };
-    });
-
-    setSelectableRows(newRows);
-
-    const selectedRows = newRows.filter((item) => item.isSelected);
-    dispatch(setSelectedMentors(selectedRows));
+  const handleChangePage = async (_: unknown, pageNumber: number) => {
+    pageChangeCallback(pageNumber);
   };
+
+  const generateSingleRow = useCallback(
+    (row) =>
+      columns?.map((col: IColumn) => {
+        const value = col.layout ? col.layout(row) : row[col.field];
+        return (
+          <TableCell key={col.field} align="left">
+            {generateValue(value, col)}
+          </TableCell>
+        );
+      }),
+    [columns]
+  );
 
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell padding="checkbox" />
             {columns.map((item) => (
               <TableCell>{item.title}</TableCell>
             ))}
           </TableRow>
         </TableHead>
         <TableBody>
-          {selectableRows.map((row) => (
-            <TableRow key={row.id} selected={isSelectable && row.isSelected}>
-              {isSelectable && (
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={row.isSelected}
-                    onChange={() => handleSelectRow(row.id)}
-                    disabled={disableCheckbox}
-                  />
-                </TableCell>
-              )}
-              {columns.map((col) => (
-                <TableCell component="th" scope="row" key={col.field}>
-                  {row[col.field]}
-                </TableCell>
-              ))}
-            </TableRow>
+          {rows.map((row) => (
+            <TableRow key={row.id}>{generateSingleRow(row)}</TableRow>
           ))}
+          {paginationDetails !== null && paginationDetails?.total > 8 && (
+            <TablePagination
+              count={paginationDetails?.total_pages}
+              page={paginationDetails.page}
+              handleChange={handleChangePage}
+              rowsPerPage={paginationDetails.per_page}
+            />
+          )}
         </TableBody>
       </Table>
     </TableContainer>

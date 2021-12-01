@@ -1,71 +1,180 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
-
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import { useState, useCallback, useEffect, Fragment, useMemo } from "react";
+import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 
 import McTable from "../../shared/components/Table";
 import LoadingWrapper from "../../shared/containers/LoadingWrapper";
-import { ESteps } from "../../shared/models/Interfaces/auth";
-import {
-  getMentors,
-  selectMentors,
-  selectSelectedMentors,
-} from "../../store/slicers/mentors";
+import { getUsers } from "../../store/slicers/users";
 
-import columns from "./constants";
-import { IMentor } from "../../store/models/interfaces/mentor";
+import McButton from "../../shared/components/Button";
+import { Box } from "@mui/system";
+import TcDialog from "../../shared/components/Dialog";
+import CreateUser from "./components/CreateUser";
+import { Avatar } from "@mui/material";
+import ActionsCell from "../../shared/components/ActionsCell";
 
-const Home = (): JSX.Element => {
-  const mentors = useSelector(selectMentors);
-  const selectedMentors = useSelector(selectSelectedMentors);
-  const [mentorsList, setMentorsList] = useState([]);
-  const history = useHistory();
+import DeleteIcon from "@mui/icons-material/Delete";
+import CreateIcon from "@mui/icons-material/Create";
+import EditUser from "./components/EditUser";
+
+const Users = (): JSX.Element => {
+  const [users, setUsers] = useState([]);
+  const [activePage, setActivePage] = useState(1);
+  const [paginationDetails, setPaginationDetails] = useState();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editDialog, setEditDialog] = useState(false);
+  const [removeDialog, setRemoveDialog] = useState(false);
+  const [activeRowId, setActiveRowId] = useState();
+
   const dispatch = useDispatch();
 
-  const goBack = () => {
-    history.push({
-      pathname: "/register",
-      state: { page: ESteps.ThirdStep },
+  const handleGetUsers = useCallback(async () => {
+    const { meta, payload } = await dispatch(getUsers(activePage));
+    if (meta.requestStatus !== "fulfilled" && !payload) {
+      return;
+    }
+
+    const { data, page, per_page, total, total_pages } = payload;
+
+    const usersWithIndexes = data.map((user, index) => ({
+      ...user,
+      index,
+    }));
+
+    setUsers(usersWithIndexes);
+
+    setPaginationDetails({
+      page,
+      per_page,
+      total,
+      total_pages,
     });
+  }, [activePage, dispatch]);
+
+  const handleChangePage = useCallback((page) => {
+    setActivePage(page);
+  }, []);
+
+  useEffect(() => {
+    handleGetUsers();
+  }, [handleGetUsers]);
+
+  const handleOpenDialog = () => {
+    setIsDialogOpen(true);
   };
 
-  useEffect(() => {
-    const newMentors = mentors.map((mentor: IMentor) => {
-      return {
-        ...mentor,
-        isSelected: selectedMentors.some(
-          (item: IMentor) => item.id === mentor.id
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+  };
+
+  const openEditDialog = (rowId) => {
+    setActiveRowId(rowId)
+    setEditDialog(true);
+  };
+
+  const closeEditDialog = () => {
+    setEditDialog(false);
+  };
+
+  const openRemoveDialog = () => {
+    setRemoveDialog(true);
+  };
+
+  const closeRemoveDialog = () => {
+    setRemoveDialog(false);
+  };
+
+  const getItemActions = useCallback(
+    (rowId) => [
+      {
+        icon: CreateIcon,
+        callback: () => openEditDialog(rowId),
+      },
+      {
+        icon: DeleteIcon,
+        callback: () => openRemoveDialog(rowId),
+      },
+    ],
+    []
+  );
+
+  const columnsWithLayouts = useMemo(
+    () => [
+      {
+        title: "Avatar",
+        layout: (row) => (
+          <Link to={`/users/${row.id}`}>
+            <Avatar
+              alt={`${row.first_name} ${row.last_name}`}
+              src={row.avatar}
+            />
+          </Link>
         ),
-      };
-    });
-
-    setMentorsList(newMentors);
-  }, [mentors]);
-
-  useEffect(() => {
-    dispatch(getMentors());
-  }, [dispatch]);
+      },
+      {
+        title: "Index",
+        layout: (row) => row.index,
+      },
+      {
+        title: "Full name",
+        layout: (row) => (
+          <Link to={`/users/${row.id}`}>
+            {row.first_name} {row.last_name}
+          </Link>
+        ),
+      },
+      {
+        title: "Email",
+        layout: (row) => row.email,
+      },
+      {
+        title: "",
+        layout: (row: any) => (
+          <ActionsCell actions={getItemActions(row?.id)} row={row} />
+        ),
+      },
+    ],
+    [getItemActions]
+  );
 
   return (
-    <div>
-      <Box display="flex" justifyContent="flex-end" mb={3}>
-        <Button color="primary" variant="contained" onClick={goBack}>
-          Manage your suggestions
-        </Button>
-      </Box>
-
-      <LoadingWrapper isLoading={!mentors.length}>
+    <Fragment>
+      <LoadingWrapper isLoading={!users.length}>
+        <Box mb={4}>
+          <McButton onClick={handleOpenDialog}>Create new user </McButton>
+        </Box>
         <McTable
-          rows={mentorsList}
-          columns={columns}
+          rows={users}
+          columns={columnsWithLayouts}
           disableCheckbox
           isSelectable
+          paginationDetails={paginationDetails}
+          pageChangeCallback={handleChangePage}
         />
       </LoadingWrapper>
-    </div>
+      <TcDialog title="Create new user" open={isDialogOpen} handleClose={handleCloseDialog}>
+        <CreateUser
+          getData={handleGetUsers}
+          handleCloseDialog={handleCloseDialog}
+        />
+      </TcDialog>
+
+      <TcDialog title="Edit user" open={editDialog}  handleClose={closeEditDialog}>
+        <EditUser
+          getData={handleGetUsers}
+          handleCloseDialog={closeEditDialog}
+          userId={activeRowId}
+        />
+      </TcDialog>
+
+      <TcDialog title="Create new user" open={isDialogOpen}>
+        <CreateUser
+          getData={handleGetUsers}
+          handleCloseDialog={handleCloseDialog}
+        />
+      </TcDialog>
+    </Fragment>
   );
 };
 
-export default Home;
+export default Users;

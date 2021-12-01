@@ -30,6 +30,7 @@ const McButton = ({
   disabled,
   clickHandler,
   variant = "contained",
+  type,
   ...rest
 }: IMcButton) => {
   const classes = useStyles();
@@ -49,6 +50,7 @@ const McButton = ({
       {...rest}
       variant={variant}
       style={computedStyles}
+      type={type}
     >
       {children}
     </Button>
