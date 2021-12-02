@@ -23,9 +23,16 @@ export const loginUser = createAsyncThunk(
 const authSlice = createSlice({
   name,
   initialState,
-  reducers: {},
+  reducers: {
+    setAuthenticated(state, { payload }) {
+      state.isAuthenticated = payload;
+    },
+  },
 });
 
+export const { setAuthenticated } = authSlice.actions;
+
+export const selectAuthenticated = (state: any) => state.auth.isAuthenticated;
 export const selectUser = (state: any) => state.auth.user;
 
 export default authSlice.reducer;

@@ -4,9 +4,10 @@ import Container from "@mui/material/Container";
 import { IconButton, Theme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
-import Logo from "../../assets/images/logo.png";
 import { Box } from "@mui/system";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import { useSelector } from "react-redux";
+import { selectAuthenticated, setAuthenticated } from "../../store/slicers/auth";
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -23,19 +24,23 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Header = (): JSX.Element => {
   const classes = useStyles();
   const history = useHistory();
+  const isAuthenticated = localStorage.getItem('token')
 
   const logout = () => {
-    localStorage.removeItem('token');
-    history.push('/login')
-  }
+    localStorage.removeItem("token");
+    history.push("/login");
+    localStorage.removeItem('token')
+  };
 
   return (
     <header className={classes.header}>
       <Container>
         <Box display="flex" justifyContent="flex-end">
-          <IconButton onClick={logout}>
-            <ExitToAppIcon color="primary"/>
-          </IconButton>
+          {isAuthenticated && (
+            <IconButton onClick={logout}>
+              <ExitToAppIcon color="primary" />
+            </IconButton>
+          )}
         </Box>
       </Container>
     </header>

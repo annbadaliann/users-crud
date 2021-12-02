@@ -22,6 +22,14 @@ export const getUser = createAsyncThunk(`${name}/getUser`, async (userId) => {
   });
 });
 
+export const deleteUser = createAsyncThunk(`${name}/deleteUser`, async (userId) => {
+  return api({
+    method: "DELETE",
+    url: `${BASE_URL}/${name}/${userId}`,
+  });
+});
+
+
 export const createUser = createAsyncThunk(`${name}/createUser`, async (data) => {
   return api({
     method: "POST",

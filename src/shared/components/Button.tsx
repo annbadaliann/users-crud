@@ -18,9 +18,10 @@ interface IMcButton {
   children: ReactNode;
   width?: string;
   className?: string | undefined;
-  clickHandler: any;
+  clickHandler?: any;
   variant?: Variant | undefined;
-  disabled: boolean;
+  disabled?: boolean;
+  type?: string,
 }
 
 const McButton = ({

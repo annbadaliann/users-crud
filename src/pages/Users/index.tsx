@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import McTable from "../../shared/components/Table";
 import LoadingWrapper from "../../shared/containers/LoadingWrapper";
-import { getUsers } from "../../store/slicers/users";
+import { deleteUser, getUsers } from "../../store/slicers/users";
 
 import McButton from "../../shared/components/Button";
 import { Box } from "@mui/system";
@@ -16,6 +16,7 @@ import ActionsCell from "../../shared/components/ActionsCell";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CreateIcon from "@mui/icons-material/Create";
 import EditUser from "./components/EditUser";
+import ConfirmationDialog from "../../shared/components/ConfirmationDialog";
 
 const Users = (): JSX.Element => {
   const [users, setUsers] = useState([]);
@@ -68,7 +69,7 @@ const Users = (): JSX.Element => {
   };
 
   const openEditDialog = (rowId) => {
-    setActiveRowId(rowId)
+    setActiveRowId(rowId);
     setEditDialog(true);
   };
 
@@ -76,7 +77,8 @@ const Users = (): JSX.Element => {
     setEditDialog(false);
   };
 
-  const openRemoveDialog = () => {
+  const openRemoveDialog = (rowId) => {
+    setActiveRowId(rowId);
     setRemoveDialog(true);
   };
 
@@ -97,6 +99,15 @@ const Users = (): JSX.Element => {
     ],
     []
   );
+
+  const handleDeleteUser = async () => {
+    debugger;
+
+    const { meta, payload } = await dispatch(deleteUser(activeRowId));
+   
+    handleGetUsers();
+    closeRemoveDialog();
+  };
 
   const columnsWithLayouts = useMemo(
     () => [
@@ -152,14 +163,22 @@ const Users = (): JSX.Element => {
           pageChangeCallback={handleChangePage}
         />
       </LoadingWrapper>
-      <TcDialog title="Create new user" open={isDialogOpen} handleClose={handleCloseDialog}>
+      <TcDialog
+        title="Create new user"
+        open={isDialogOpen}
+        handleClose={handleCloseDialog}
+      >
         <CreateUser
           getData={handleGetUsers}
           handleCloseDialog={handleCloseDialog}
         />
       </TcDialog>
 
-      <TcDialog title="Edit user" open={editDialog}  handleClose={closeEditDialog}>
+      <TcDialog
+        title="Edit user"
+        open={editDialog}
+        handleClose={closeEditDialog}
+      >
         <EditUser
           getData={handleGetUsers}
           handleCloseDialog={closeEditDialog}
@@ -167,12 +186,11 @@ const Users = (): JSX.Element => {
         />
       </TcDialog>
 
-      <TcDialog title="Create new user" open={isDialogOpen}>
-        <CreateUser
-          getData={handleGetUsers}
-          handleCloseDialog={handleCloseDialog}
-        />
-      </TcDialog>
+      <ConfirmationDialog
+        open={removeDialog}
+        cancelAction={closeRemoveDialog}
+        confirmAction={handleDeleteUser}
+      />
     </Fragment>
   );
 };
