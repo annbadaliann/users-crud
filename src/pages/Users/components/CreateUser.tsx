@@ -1,5 +1,6 @@
 import { FormProvider, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
+import { useSnackbar } from "notistack";
 
 import Box from "@mui/system/Box";
 
@@ -7,7 +8,6 @@ import McButton from "../../../shared/components/Button";
 import McInput from "../../../shared/components/Input";
 import { AppDispatch } from "../../../store";
 import { createUser } from "../../../store/slicers/users";
-
 interface ICreateUserProps {
   getData: () => void;
   handleCloseDialog: () => void;
@@ -19,6 +19,8 @@ interface IUserForm {
 }
 
 const CreateUser = ({ getData, handleCloseDialog }: ICreateUserProps) => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const methods = useForm({
     shouldUnregister: false,
     mode: "all",
@@ -33,7 +35,7 @@ const CreateUser = ({ getData, handleCloseDialog }: ICreateUserProps) => {
     if (meta.requestStatus !== "fulfilled") {
       return;
     }
-    // show alert
+    enqueueSnackbar("User successfully created", { variant: "success" });
     handleCloseDialog();
     getData();
   };

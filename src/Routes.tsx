@@ -43,15 +43,13 @@ const Routes = (): JSX.Element => {
       <PrivateRoute
         restricted={false}
         component={UserDetails}
-        path="/users:id"
+        path="/users/:id"
         exact
       />
 
       <PublicRoute restricted={true} component={Login} path="/login" exact />
       <Redirect to="/login" />
-      <Route path="/users" exact component={Users} />
-      <Route path="/users/:id" exact component={UserDetails} />
-      <Route path="/login" exact component={Login} />
+      
     </Switch>
   );
 };

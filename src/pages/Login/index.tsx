@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { FormProvider, useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
+import { useSnackbar } from "notistack";
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -17,6 +18,7 @@ import useStyles from "./style";
 const Login = (): JSX.Element => {
   const history = useHistory();
   const dispatch = useDispatch<AppDispatch>();
+  const { enqueueSnackbar } = useSnackbar();
 
   const classes = useStyles();
 
@@ -32,13 +34,14 @@ const Login = (): JSX.Element => {
       const { meta, payload } = await dispatch(loginUser(data));
 
       if (meta.requestStatus !== "fulfilled") {
+        enqueueSnackbar("Email or password is wrong", { variant: "error" });
         return;
       }
       
       localStorage.setItem("token", payload.token);
       history.push("/users");
     },
-    [dispatch, history]
+    [dispatch, enqueueSnackbar, history]
   );
 
   return (

@@ -16,6 +16,10 @@ const useStyles = makeStyles(() => ({
   goBack: {
     display: "flex",
     cursor: "pointer",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: "20px",
+    fontSize: "22px"
   },
 }));
 

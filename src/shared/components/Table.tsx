@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
@@ -7,14 +9,12 @@ import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 
 import { Pagination, PaginationItem } from "@mui/material";
-import { useCallback } from "react";
 
 interface IColumn {
   title: string;
   field: string;
-  layout: (row: any) => any
+  layout: (row: any) => any;
 }
-
 interface IRow {
   id: string;
   isSelected?: boolean;
@@ -39,14 +39,16 @@ const TablePagination = ({
   rowsPerPage,
 }: IPagination) => {
   return (
-    <Pagination
-      count={count}
-      page={page}
-      rowsPerPage={rowsPerPage}
-      onChange={handleChange}
-      shape="rounded"
-      renderItem={(item) => <PaginationItem {...item} />}
-    />
+    <div style={{ padding: "10px", display: "flex" }}>
+      <Pagination
+        count={count}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onChange={handleChange}
+        shape="rounded"
+        renderItem={(item) => <PaginationItem {...item} />}
+      />
+    </div>
   );
 };
 
@@ -96,15 +98,15 @@ const McTable = ({
           {rows.map((row) => (
             <TableRow key={row.id}>{generateSingleRow(row)}</TableRow>
           ))}
-          {paginationDetails !== null && paginationDetails?.total > 8 && (
-            <TablePagination
-              count={paginationDetails?.total_pages}
-              page={paginationDetails.page}
-              handleChange={handleChangePage}
-              rowsPerPage={paginationDetails.per_page}
-            />
-          )}
         </TableBody>
+        {paginationDetails !== null && paginationDetails?.total > 8 && (
+          <TablePagination
+            count={paginationDetails?.total_pages}
+            page={paginationDetails.page}
+            handleChange={handleChangePage}
+            rowsPerPage={paginationDetails.per_page}
+          />
+        )}
       </Table>
     </TableContainer>
   );

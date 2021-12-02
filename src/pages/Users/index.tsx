@@ -117,6 +117,7 @@ const Users = (): JSX.Element => {
         layout: (row) => (
           <Link to={`/users/${row.id}`}>
             <Avatar
+
               alt={`${row.first_name} ${row.last_name}`}
               src={row.avatar}
             />
@@ -153,7 +154,7 @@ const Users = (): JSX.Element => {
     <Fragment>
       <LoadingWrapper isLoading={!users.length}>
         <Box mb={4}>
-          <McButton onClick={handleOpenDialog}>Create new user </McButton>
+          <McButton clickHandler={handleOpenDialog}>Create new user </McButton>
         </Box>
         <McTable
           rows={users}
@@ -188,6 +189,8 @@ const Users = (): JSX.Element => {
       </TcDialog>
 
       <ConfirmationDialog
+        title="Delete"
+        description="Are you sure you want to delete this user?"
         open={removeDialog}
         cancelAction={closeRemoveDialog}
         confirmAction={handleDeleteUser}

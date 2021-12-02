@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: "column",
     alignItems: "center",
     width: "100%",
-    minWidth: 320, // TODO
+    minWidth: 320,
     position: "relative",
     height: "auto",
     zIndex: 1,
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.common.white,
   },
   closeIcon: {
-    position: "absolute !important",
+    position: "absolute",
     right: "5px",
     top: "5px"
   },
@@ -68,7 +68,6 @@ const TcDialog = ({
       >
         <CloseIcon />
       </IconButton>
-
       <DialogContent className={classes.dialog} style={{ padding }}>
         {children}
       </DialogContent>

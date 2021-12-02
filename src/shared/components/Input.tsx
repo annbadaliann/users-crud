@@ -3,9 +3,10 @@ import TextField from "@mui/material/TextField";
 interface IInput {
   name: string;
   label: string;
+  shrink?: boolean
 }
 
-const McInput = ({ name, label, ...props }: IInput) => {
+const McInput = ({ name, label, shrink, ...props }: IInput) => {
   const { control, formState } = useFormContext();
   const { register } = control;
 
@@ -14,6 +15,7 @@ const McInput = ({ name, label, ...props }: IInput) => {
       fullWidth
       label={label}
       margin="dense"
+      InputLabelProps={{ shrink }}
       error={formState?.errors?.[name]}
       {...register(name, { required: true })}
       {...props}

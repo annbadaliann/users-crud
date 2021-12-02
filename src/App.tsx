@@ -1,9 +1,11 @@
 import { Router } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import { Provider as StoreProvider } from "react-redux";
+import { SnackbarProvider } from "notistack";
 
-import CssBaseline from '@mui/material/CssBaseline';
+import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
+
 import store from "./store";
 import Routes from "./Routes";
 
@@ -17,17 +19,19 @@ const history = createBrowserHistory();
 const App = (): JSX.Element => {
   return (
     <div className="App">
-      <NormalizeStyles />
-      <ThemeProvider theme={theme}>
-      <CssBaseline />
-        <StoreProvider store={store}>
-          <Router history={history}>
-            <MainLayout>
-              <Routes />
-            </MainLayout>
-          </Router>
-        </StoreProvider>
-      </ThemeProvider>
+      <SnackbarProvider>
+        <NormalizeStyles />
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <StoreProvider store={store}>
+            <Router history={history}>
+              <MainLayout>
+                <Routes />
+              </MainLayout>
+            </Router>
+          </StoreProvider>
+        </ThemeProvider>
+      </SnackbarProvider>
     </div>
   );
 };
