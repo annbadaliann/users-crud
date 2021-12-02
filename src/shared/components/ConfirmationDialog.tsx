@@ -1,5 +1,3 @@
-import { Box } from "@mui/system";
-import React from "react";
 import McButton from "./Button";
 import TcDialog from "./Dialog";
 
@@ -10,26 +8,39 @@ const useStyles = makeStyles(() => ({
     marginRight: "15px !important",
   },
   actionsSide: {
-      marginTop: "40px",
-  }
+    marginTop: "40px",
+  },
 }));
 
-const ConfirmationDialog = ({ open, cancelAction, confirmAction }) => {
+interface IConfirmationDialogProps {
+  open: boolean;
+  title: string;
+  description: string;
+  cancelAction: () => void;
+  confirmAction: () => void;
+}
+const ConfirmationDialog = ({
+  open,
+  title,
+  description,
+  cancelAction,
+  confirmAction,
+}: IConfirmationDialogProps) => {
   const classes = useStyles();
 
   return (
-    <TcDialog open={open} title="Delete">
-      <p> description="Are you sure...."</p>
+    <TcDialog open={open} title={title} handleClose={cancelAction}>
+      <p>{description}</p>
       <div className={classes.actionsSide}>
         <McButton
           variant="outlined"
           width="140px"
           className={classes.cancelBtn}
-          onClick={cancelAction}
+          clickHandler={cancelAction}
         >
           Cancel
         </McButton>
-        <McButton width="140px" onClick={confirmAction}>
+        <McButton width="140px" clickHandler={confirmAction}>
           Confirm
         </McButton>
       </div>

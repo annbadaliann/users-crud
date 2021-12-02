@@ -1,45 +1,28 @@
-import { Avatar, Card } from "@mui/material";
-import React, {
-  useState,
-  useCallback,
-  useEffect,
-  useMemo,
-  Fragment,
-} from "react";
+import React, { useState, useCallback, useEffect, Fragment } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory, useParams } from "react-router";
-import { getUser } from "../../store/slicers/users";
 
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 
-import { makeStyles } from "@mui/styles";
-import { Box } from "@mui/system";
+import { getUser } from "../../store/slicers/users";
 
-const useStyles = makeStyles(() => ({
-  card: {
-    padding: "20px",
-    width: "500px",
-    margin: "0 auto",
-    display: "flex",
-    boxShadow: "0 0 10px #ccc",
-  },
-  avatar: {
-    width: "100px",
-    height: "100px",
-    marginRight: "20px",
-  },
-  goBack: {
-    display: "flex",
-    cursor: "pointer"
-  }
-}));
+import useStyles from "./style";
+import { IUser } from "../../store/models/interfaces/user";
+import { AppDispatch } from "../../store";
+
+interface IParams {
+  id: string;
+}
 
 const UserDetails = () => {
-  const dispatch = useDispatch();
-  const [userData, setUserData] = useState(null);
-  const { id } = useParams();
-  const classes = useStyles();
+  const [userData, setUserData] = useState<IUser | null>(null);
+
   const history = useHistory();
+  const { id } = useParams<IParams>();
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  const classes = useStyles();
 
   const getUserDetails = useCallback(async () => {
     const { meta, payload } = await dispatch(getUser(id));
@@ -56,8 +39,8 @@ const UserDetails = () => {
   }, [getUserDetails]);
 
   const goBack = () => {
-    history.push('/users')
-  }
+    history.push("/users");
+  };
 
   return (
     <Fragment>

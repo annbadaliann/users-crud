@@ -2,21 +2,24 @@ import { useState, useCallback, useEffect, Fragment, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
-import McTable from "../../shared/components/Table";
-import LoadingWrapper from "../../shared/containers/LoadingWrapper";
-import { deleteUser, getUsers } from "../../store/slicers/users";
-
-import McButton from "../../shared/components/Button";
-import { Box } from "@mui/system";
-import TcDialog from "../../shared/components/Dialog";
-import CreateUser from "./components/CreateUser";
+import Box from "@mui/system/Box";
 import { Avatar } from "@mui/material";
-import ActionsCell from "../../shared/components/ActionsCell";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import CreateIcon from "@mui/icons-material/Create";
-import EditUser from "./components/EditUser";
+
+import TcDialog from "../../shared/components/Dialog";
+import ActionsCell from "../../shared/components/ActionsCell";
+import McTable from "../../shared/components/Table";
+import McButton from "../../shared/components/Button";
 import ConfirmationDialog from "../../shared/components/ConfirmationDialog";
+import LoadingWrapper from "../../shared/containers/LoadingWrapper";
+
+import { deleteUser, getUsers } from "../../store/slicers/users";
+import CreateUser from "./components/CreateUser";
+import EditUser from "./components/EditUser";
+import { AppDispatch } from "../../store";
+import { IUser } from "../../store/models/interfaces/user";
 
 const Users = (): JSX.Element => {
   const [users, setUsers] = useState([]);
@@ -25,9 +28,9 @@ const Users = (): JSX.Element => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editDialog, setEditDialog] = useState(false);
   const [removeDialog, setRemoveDialog] = useState(false);
-  const [activeRowId, setActiveRowId] = useState();
+  const [activeRowId, setActiveRowId] = useState<number | undefined>();
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
 
   const handleGetUsers = useCallback(async () => {
     const { meta, payload } = await dispatch(getUsers(activePage));
@@ -37,7 +40,7 @@ const Users = (): JSX.Element => {
 
     const { data, page, per_page, total, total_pages } = payload;
 
-    const usersWithIndexes = data.map((user, index) => ({
+    const usersWithIndexes = data.map((user: IUser, index: number) => ({
       ...user,
       index,
     }));
@@ -101,10 +104,8 @@ const Users = (): JSX.Element => {
   );
 
   const handleDeleteUser = async () => {
-    debugger;
+    await dispatch(deleteUser(activeRowId));
 
-    const { meta, payload } = await dispatch(deleteUser(activeRowId));
-   
     handleGetUsers();
     closeRemoveDialog();
   };

@@ -7,16 +7,14 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
 import McButton from "../../shared/components/Button";
-import { loginUser, setAuthenticated } from "../../store/slicers/auth";
-
+import McInput from "../../shared/components/Input";
+import { loginUser } from "../../store/slicers/auth";
 import { AppDispatch } from "../../store";
-
 import { IUser } from "../../store/models/interfaces/user";
 
 import useStyles from "./style";
-import McInput from "../../shared/components/Input";
 
-const Login = () => {
+const Login = (): JSX.Element => {
   const history = useHistory();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -36,6 +34,7 @@ const Login = () => {
       if (meta.requestStatus !== "fulfilled") {
         return;
       }
+      
       localStorage.setItem("token", payload.token);
       history.push("/users");
     },
@@ -43,7 +42,7 @@ const Login = () => {
   );
 
   return (
-    <Box className={classes.mainWrapper}>
+    <div className={classes.wrapper}>
       <Typography component="h1" variant="h5">
         Login
       </Typography>
@@ -56,7 +55,7 @@ const Login = () => {
           </Box>
         </form>
       </FormProvider>
-    </Box>
+    </div>
   );
 };
 

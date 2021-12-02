@@ -8,21 +8,21 @@ const initialState: any = {
 
 const name = "users";
 
-export const getUsers = createAsyncThunk(`${name}/getUsers`, async (page) => {
+export const getUsers = createAsyncThunk(`${name}/getUsers`, async (page: number) => {
   return api({
     method: "GET",
     url: `${BASE_URL}/${name}?page=${page}`,
   });
 });
 
-export const getUser = createAsyncThunk(`${name}/getUser`, async (userId) => {
+export const getUser = createAsyncThunk(`${name}/getUser`, async (userId: string) => {
   return api({
     method: "GET",
     url: `${BASE_URL}/${name}/${userId}`,
   });
 });
 
-export const deleteUser = createAsyncThunk(`${name}/deleteUser`, async (userId) => {
+export const deleteUser = createAsyncThunk(`${name}/deleteUser`, async (userId: number) => {
   return api({
     method: "DELETE",
     url: `${BASE_URL}/${name}/${userId}`,

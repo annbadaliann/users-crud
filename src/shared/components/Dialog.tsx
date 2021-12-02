@@ -50,7 +50,7 @@ const TcDialog = ({
   title,
   handleClose,
   ...other
-}) => {
+}: any) => {
   const classes = useStyles();
   return (
     <Dialog

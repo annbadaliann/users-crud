@@ -6,8 +6,7 @@ import { makeStyles } from "@mui/styles";
 
 import { Box } from "@mui/system";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import { useSelector } from "react-redux";
-import { selectAuthenticated, setAuthenticated } from "../../store/slicers/auth";
+
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {

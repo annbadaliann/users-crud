@@ -1,18 +1,27 @@
-import { Box } from "@mui/system";
-import React, { useEffect, useCallback } from "react";
+import { useEffect, useCallback } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
+
+import Box from "@mui/system/Box";
+
 import McButton from "../../../shared/components/Button";
 import McInput from "../../../shared/components/Input";
 import { createUser, getUser } from "../../../store/slicers/users";
+import { AppDispatch } from "../../../store";
 
-const EditUser = ({ getData, handleCloseDialog, userId }) => {
+interface IEditUserProps {
+  getData: () => void;
+  handleCloseDialog: () => void;
+  userId: number | undefined;
+}
+
+const EditUser = ({ getData, handleCloseDialog, userId }: IEditUserProps) => {
   const methods = useForm({
     shouldUnregister: false,
     mode: "all",
   });
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const getUserDetails = useCallback(async () => {
     const { meta } = await dispatch(getUser(userId));
@@ -27,7 +36,7 @@ const EditUser = ({ getData, handleCloseDialog, userId }) => {
     getUserDetails();
   }, [getUserDetails]);
 
-  const { handleSubmit, reset } = methods;
+  const { handleSubmit } = methods;
 
   const onSubmit = async (formData) => {
     const { meta } = await dispatch(createUser(formData));

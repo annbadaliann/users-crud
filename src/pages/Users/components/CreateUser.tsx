@@ -1,21 +1,33 @@
-import { Box } from "@mui/system";
-import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
+
+import Box from "@mui/system/Box";
+
 import McButton from "../../../shared/components/Button";
 import McInput from "../../../shared/components/Input";
+import { AppDispatch } from "../../../store";
 import { createUser } from "../../../store/slicers/users";
 
-const CreateUser = ({ getData, handleCloseDialog }) => {
+interface ICreateUserProps {
+  getData: () => void;
+  handleCloseDialog: () => void;
+}
+
+interface IUserForm {
+  job: string;
+  name: string;
+}
+
+const CreateUser = ({ getData, handleCloseDialog }: ICreateUserProps) => {
   const methods = useForm({
     shouldUnregister: false,
     mode: "all",
   });
 
   const { handleSubmit } = methods;
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
-  const onSubmit = async (formData) => {
+  const onSubmit = async (formData: IUserForm) => {
     const { meta } = await dispatch(createUser(formData));
 
     if (meta.requestStatus !== "fulfilled") {

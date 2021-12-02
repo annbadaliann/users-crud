@@ -12,6 +12,7 @@ import { useCallback } from "react";
 interface IColumn {
   title: string;
   field: string;
+  layout: (row: any) => any
 }
 
 interface IRow {

@@ -32,7 +32,6 @@ const McButton = ({
   clickHandler,
   variant = "contained",
   type,
-  ...rest
 }: IMcButton) => {
   const classes = useStyles();
 
@@ -48,10 +47,9 @@ const McButton = ({
       color="primary"
       onClick={clickHandler}
       disabled={disabled}
-      {...rest}
+      type="submit"
       variant={variant}
       style={computedStyles}
-      type={type}
     >
       {children}
     </Button>

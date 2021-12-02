@@ -1,7 +1,7 @@
 import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles(() => ({
-  mainWrapper: {
+  wrapper: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
