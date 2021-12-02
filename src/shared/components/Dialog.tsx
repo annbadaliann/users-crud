@@ -35,13 +35,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.common.white,
   },
   closeIcon: {
-    position: "absolute",
+    position: "absolute !important",
     right: "5px",
     top: "5px"
   },
 }));
 
-const TcDialog = ({
+const TcoDialog = ({
   open,
   maxWidth,
   padding,
@@ -75,4 +75,4 @@ const TcDialog = ({
   );
 };
 
-export default TcDialog;
+export default TcoDialog;

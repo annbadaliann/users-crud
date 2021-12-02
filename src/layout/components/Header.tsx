@@ -6,6 +6,7 @@ import { makeStyles } from "@mui/styles";
 
 import { Box } from "@mui/system";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import { useState } from "react";
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -23,10 +24,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Header = (): JSX.Element => {
   const classes = useStyles();
   const history = useHistory();
-  const isAuthenticated = localStorage.getItem('token')
 
   const logout = () => {
-    localStorage.removeItem("token");
     history.push("/login");
     localStorage.removeItem('token')
   };
@@ -35,7 +34,7 @@ const Header = (): JSX.Element => {
     <header className={classes.header}>
       <Container>
         <Box display="flex" justifyContent="flex-end">
-          {isAuthenticated && (
+          {!!localStorage.getItem('token') && (
             <IconButton onClick={logout}>
               <ExitToAppIcon color="primary" />
             </IconButton>

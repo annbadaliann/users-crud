@@ -7,8 +7,8 @@ import { useSnackbar } from "notistack";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
-import McButton from "../../shared/components/Button";
-import McInput from "../../shared/components/Input";
+import TcoButton from "../../shared/components/Button";
+import TcoInput from "../../shared/components/Input";
 import { loginUser } from "../../store/slicers/auth";
 import { AppDispatch } from "../../store";
 import { IUser } from "../../store/models/interfaces/user";
@@ -51,10 +51,10 @@ const Login = (): JSX.Element => {
       </Typography>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <McInput label="Email" name="email" />
-          <McInput label="Password" name="password" />
+          <TcoInput label="Email" name="email" />
+          <TcoInput label="Password" name="password" />
           <Box display="flex" justifyContent="center" mt={4}>
-            <McButton type="submit">Submit</McButton>
+            <TcoButton type="submit">Submit</TcoButton>
           </Box>
         </form>
       </FormProvider>

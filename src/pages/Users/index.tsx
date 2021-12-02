@@ -117,7 +117,6 @@ const Users = (): JSX.Element => {
         layout: (row) => (
           <Link to={`/users/${row.id}`}>
             <Avatar
-
               alt={`${row.first_name} ${row.last_name}`}
               src={row.avatar}
             />
@@ -152,19 +151,17 @@ const Users = (): JSX.Element => {
 
   return (
     <Fragment>
-      <LoadingWrapper isLoading={!users.length}>
-        <Box mb={4}>
-          <McButton clickHandler={handleOpenDialog}>Create new user </McButton>
-        </Box>
-        <McTable
-          rows={users}
-          columns={columnsWithLayouts}
-          disableCheckbox
-          isSelectable
-          paginationDetails={paginationDetails}
-          pageChangeCallback={handleChangePage}
-        />
-      </LoadingWrapper>
+      <Box mb={4}>
+        <McButton clickHandler={handleOpenDialog}>Create new user </McButton>
+      </Box>
+      <McTable
+        rows={users}
+        columns={columnsWithLayouts}
+        disableCheckbox
+        isSelectable
+        paginationDetails={paginationDetails}
+        pageChangeCallback={handleChangePage}
+      />
       <TcDialog
         title="Create new user"
         open={isDialogOpen}

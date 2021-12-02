@@ -6,7 +6,7 @@ interface IInput {
   shrink?: boolean
 }
 
-const McInput = ({ name, label, shrink, ...props }: IInput) => {
+const TcoInput = ({ name, label, shrink, ...props }: IInput) => {
   const { control, formState } = useFormContext();
   const { register } = control;
 
@@ -23,4 +23,4 @@ const McInput = ({ name, label, shrink, ...props }: IInput) => {
   );
 };
 
-export default McInput;
+export default TcoInput;

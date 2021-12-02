@@ -17,7 +17,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-function ActionsCell({ actions, row }): JSX.Element {
+interface IActionsCellProps {
+  actions: any[],
+  row: any
+}
+
+function ActionsCell({ actions, row }: IActionsCellProps): JSX.Element {
   const classes = useStyles();
 
   return (

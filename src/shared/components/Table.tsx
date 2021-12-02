@@ -19,11 +19,13 @@ interface IRow {
   id: string;
   isSelected?: boolean;
 }
-interface IMcTableProps {
+interface ITableProps {
   rows: IRow[];
   columns: IColumn[];
   disableCheckbox?: boolean;
   isSelectable?: boolean;
+  pageChangeCallback: (page: number) => void;
+  paginationDetails: any,
 }
 
 interface IPagination {
@@ -36,14 +38,12 @@ const TablePagination = ({
   count,
   page,
   handleChange,
-  rowsPerPage,
 }: IPagination) => {
   return (
     <div style={{ padding: "10px", display: "flex" }}>
       <Pagination
         count={count}
         page={page}
-        rowsPerPage={rowsPerPage}
         onChange={handleChange}
         shape="rounded"
         renderItem={(item) => <PaginationItem {...item} />}
@@ -52,20 +52,13 @@ const TablePagination = ({
   );
 };
 
-const generateValue = (value: string | any, col: IColumn) => {
-  if (col.format && col.format === EGridColumnFormat.date && value) {
-    return moment(value).format("L"); // todo create helper function date formater
-  }
-  return value;
-};
 
-const McTable = ({
+const TcoTable = ({
   rows,
   columns,
   pageChangeCallback,
   paginationDetails,
-}: IMcTableProps) => {
-  console.log(paginationDetails, "paginationDetails");
+}: ITableProps) => {
 
   const handleChangePage = async (_: unknown, pageNumber: number) => {
     pageChangeCallback(pageNumber);
@@ -77,7 +70,7 @@ const McTable = ({
         const value = col.layout ? col.layout(row) : row[col.field];
         return (
           <TableCell key={col.field} align="left">
-            {generateValue(value, col)}
+              {value}
           </TableCell>
         );
       }),
@@ -99,12 +92,11 @@ const McTable = ({
             <TableRow key={row.id}>{generateSingleRow(row)}</TableRow>
           ))}
         </TableBody>
-        {paginationDetails !== null && paginationDetails?.total > 8 && (
+        {paginationDetails !== null && paginationDetails?.total > paginationDetails.per_page && (
           <TablePagination
             count={paginationDetails?.total_pages}
             page={paginationDetails.page}
             handleChange={handleChangePage}
-            rowsPerPage={paginationDetails.per_page}
           />
         )}
       </Table>
@@ -112,4 +104,4 @@ const McTable = ({
   );
 };
 
-export default McTable;
+export default TcoTable;

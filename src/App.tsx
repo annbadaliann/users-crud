@@ -18,21 +18,21 @@ const history = createBrowserHistory();
 
 const App = (): JSX.Element => {
   return (
-    <div className="App">
-      <SnackbarProvider>
-        <NormalizeStyles />
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <StoreProvider store={store}>
+    <StoreProvider store={store}>
+      <div className="App">
+        <SnackbarProvider>
+          <NormalizeStyles />
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
             <Router history={history}>
               <MainLayout>
                 <Routes />
               </MainLayout>
             </Router>
-          </StoreProvider>
-        </ThemeProvider>
-      </SnackbarProvider>
-    </div>
+          </ThemeProvider>
+        </SnackbarProvider>
+      </div>
+    </StoreProvider>
   );
 };
 

@@ -24,7 +24,7 @@ interface IMcButton {
   type?: string,
 }
 
-const McButton = ({
+const TcoButton = ({
   children,
   width = "257px",
   className,
@@ -56,4 +56,4 @@ const McButton = ({
   );
 };
 
-export default McButton;
+export default TcoButton;

@@ -5,8 +5,8 @@ import { useSnackbar } from "notistack";
 
 import Box from "@mui/system/Box";
 
-import McButton from "../../../shared/components/Button";
-import McInput from "../../../shared/components/Input";
+import TcoButton from "../../../shared/components/Button";
+import TcoInput from "../../../shared/components/Input";
 import { createUser, getUser } from "../../../store/slicers/users";
 import { AppDispatch } from "../../../store";
 
@@ -62,10 +62,10 @@ const EditUser = ({ getData, handleCloseDialog, userId }: IEditUserProps) => {
     <div>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <McInput label="Name" name="name" shrink={watch('name') !== null}/>
-          <McInput label="Job" name="job" shrink={watch('job') !== null}/>
+          <TcoInput label="Name" name="name" shrink={watch('name') !== null}/>
+          <TcoInput label="Job" name="job" shrink={watch('job') !== null}/>
           <Box display="flex" justifyContent="center" mt={4}>
-            <McButton type="submit">Submit</McButton>
+            <TcoButton type="submit">Submit</McButton>
           </Box>
         </form>
       </FormProvider>

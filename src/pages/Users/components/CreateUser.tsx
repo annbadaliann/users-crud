@@ -4,8 +4,8 @@ import { useSnackbar } from "notistack";
 
 import Box from "@mui/system/Box";
 
-import McButton from "../../../shared/components/Button";
-import McInput from "../../../shared/components/Input";
+import TcoButton from "../../../shared/components/Button";
+import TcoInput from "../../../shared/components/Input";
 import { AppDispatch } from "../../../store";
 import { createUser } from "../../../store/slicers/users";
 interface ICreateUserProps {
@@ -44,10 +44,10 @@ const CreateUser = ({ getData, handleCloseDialog }: ICreateUserProps) => {
     <div>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <McInput label="Name" name="name" />
-          <McInput label="Job" name="job" />
+          <TcoInput label="Name" name="name" />
+          <TcoInput label="Job" name="job" />
           <Box display="flex" justifyContent="center" mt={4}>
-            <McButton type="submit">Submit</McButton>
+            <TcoButton type="submit">Submit</TcoButton>
           </Box>
         </form>
       </FormProvider>
