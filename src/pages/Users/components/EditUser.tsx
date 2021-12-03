@@ -7,8 +7,9 @@ import Box from "@mui/system/Box";
 
 import TcoButton from "../../../shared/components/Button";
 import TcoInput from "../../../shared/components/Input";
-import { createUser, getUser } from "../../../store/slicers/users";
+import { editUser, getUser } from "../../../store/slicers/users";
 import { AppDispatch } from "../../../store";
+import { IUserForm } from "../../../store/models/interfaces/user";
 
 interface IEditUserProps {
   getData: () => void;
@@ -29,7 +30,7 @@ const EditUser = ({ getData, handleCloseDialog, userId }: IEditUserProps) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const getUserDetails = useCallback(async () => {
-    const { meta, payload } = await dispatch(getUser(userId));
+    const { meta, payload } = await dispatch(getUser(userId)) as any;
 
     if (meta.requestStatus !== "fulfilled") {
       return;
@@ -37,18 +38,20 @@ const EditUser = ({ getData, handleCloseDialog, userId }: IEditUserProps) => {
 
     reset({
       job: "Frotend",
-      name: payload.data.first_name,
+      name: payload?.data.first_name,
     });
 
   }, [dispatch, reset, userId]);
 
   useEffect(() => {
-    getUserDetails();
-  }, [getUserDetails]);
+    if(userId){
+      getUserDetails();
+    }
+  }, [getUserDetails, userId]);
 
 
-  const onSubmit = async (formData) => {
-    const { meta } = await dispatch(createUser(formData));
+  const onSubmit = async (formData: IUserForm) => {
+    const { meta } = await dispatch(editUser({data: formData, userId}));
 
     if (meta.requestStatus !== "fulfilled") {
       return;
@@ -65,7 +68,7 @@ const EditUser = ({ getData, handleCloseDialog, userId }: IEditUserProps) => {
           <TcoInput label="Name" name="name" shrink={watch('name') !== null}/>
           <TcoInput label="Job" name="job" shrink={watch('job') !== null}/>
           <Box display="flex" justifyContent="center" mt={4}>
-            <TcoButton type="submit">Submit</McButton>
+            <TcoButton type="submit">Submit</TcoButton>
           </Box>
         </form>
       </FormProvider>

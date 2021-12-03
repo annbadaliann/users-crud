@@ -13,22 +13,21 @@ import ActionsCell from "../../shared/components/ActionsCell";
 import McTable from "../../shared/components/Table";
 import McButton from "../../shared/components/Button";
 import ConfirmationDialog from "../../shared/components/ConfirmationDialog";
-import LoadingWrapper from "../../shared/containers/LoadingWrapper";
 
+import { IUser } from "../../store/models/interfaces/user";
 import { deleteUser, getUsers } from "../../store/slicers/users";
+
 import CreateUser from "./components/CreateUser";
 import EditUser from "./components/EditUser";
-import { AppDispatch } from "../../store";
-import { IUser } from "../../store/models/interfaces/user";
 
 const Users = (): JSX.Element => {
   const [users, setUsers] = useState([]);
   const [activePage, setActivePage] = useState(1);
   const [paginationDetails, setPaginationDetails] = useState();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [createDialog, setCreateDialog] = useState(false);
   const [editDialog, setEditDialog] = useState(false);
   const [removeDialog, setRemoveDialog] = useState(false);
-  const [activeRowId, setActiveRowId] = useState<number | undefined>();
+  const [activeRowId, setActiveRowId] = useState<number>();
 
   const dispatch = useDispatch<any>();
 
@@ -63,41 +62,33 @@ const Users = (): JSX.Element => {
     handleGetUsers();
   }, [handleGetUsers]);
 
-  const handleOpenDialog = () => {
-    setIsDialogOpen(true);
+  const createDialogToggle = (flag: boolean) => {
+    setCreateDialog(flag);
   };
 
-  const handleCloseDialog = () => {
-    setIsDialogOpen(false);
+  const edtiDialogToggle = (flag: boolean, rowId: number | null) => {
+    if (rowId) {
+      setActiveRowId(rowId);
+    }
+    setEditDialog(flag);
   };
 
-  const openEditDialog = (rowId) => {
-    setActiveRowId(rowId);
-    setEditDialog(true);
-  };
-
-  const closeEditDialog = () => {
-    setEditDialog(false);
-  };
-
-  const openRemoveDialog = (rowId) => {
-    setActiveRowId(rowId);
-    setRemoveDialog(true);
-  };
-
-  const closeRemoveDialog = () => {
-    setRemoveDialog(false);
+  const deleteDialogToggle = (flag: boolean, rowId: number | null) => {
+    if (rowId) {
+      setActiveRowId(rowId);
+    }
+    setRemoveDialog(flag);
   };
 
   const getItemActions = useCallback(
     (rowId) => [
       {
         icon: CreateIcon,
-        callback: () => openEditDialog(rowId),
+        callback: () => edtiDialogToggle(true, rowId),
       },
       {
         icon: DeleteIcon,
-        callback: () => openRemoveDialog(rowId),
+        callback: () => deleteDialogToggle(true, rowId),
       },
     ],
     []
@@ -107,14 +98,14 @@ const Users = (): JSX.Element => {
     await dispatch(deleteUser(activeRowId));
 
     handleGetUsers();
-    closeRemoveDialog();
+    deleteDialogToggle(false, null);
   };
 
   const columnsWithLayouts = useMemo(
     () => [
       {
         title: "Avatar",
-        layout: (row) => (
+        layout: (row: IUser) => (
           <Link to={`/users/${row.id}`}>
             <Avatar
               alt={`${row.first_name} ${row.last_name}`}
@@ -125,11 +116,11 @@ const Users = (): JSX.Element => {
       },
       {
         title: "Index",
-        layout: (row) => row.index,
+        layout: (row: IUser) => row.index,
       },
       {
         title: "Full name",
-        layout: (row) => (
+        layout: (row: IUser) => (
           <Link to={`/users/${row.id}`}>
             {row.first_name} {row.last_name}
           </Link>
@@ -137,11 +128,11 @@ const Users = (): JSX.Element => {
       },
       {
         title: "Email",
-        layout: (row) => row.email,
+        layout: (row: IUser) => row.email,
       },
       {
         title: "",
-        layout: (row: any) => (
+        layout: (row: IUser) => (
           <ActionsCell actions={getItemActions(row?.id)} row={row} />
         ),
       },
@@ -152,7 +143,9 @@ const Users = (): JSX.Element => {
   return (
     <Fragment>
       <Box mb={4}>
-        <McButton clickHandler={handleOpenDialog}>Create new user </McButton>
+        <McButton clickHandler={() => createDialogToggle(true)}>
+          Create new user{" "}
+        </McButton>
       </Box>
       <McTable
         rows={users}
@@ -164,23 +157,23 @@ const Users = (): JSX.Element => {
       />
       <TcDialog
         title="Create new user"
-        open={isDialogOpen}
-        handleClose={handleCloseDialog}
+        open={createDialog}
+        handleClose={() => createDialogToggle(false)}
       >
         <CreateUser
           getData={handleGetUsers}
-          handleCloseDialog={handleCloseDialog}
+          handleCloseDialog={() => createDialogToggle(false)}
         />
       </TcDialog>
 
       <TcDialog
         title="Edit user"
         open={editDialog}
-        handleClose={closeEditDialog}
+        handleClose={() => edtiDialogToggle(false, null)}
       >
         <EditUser
           getData={handleGetUsers}
-          handleCloseDialog={closeEditDialog}
+          handleCloseDialog={() => edtiDialogToggle(false, null)}
           userId={activeRowId}
         />
       </TcDialog>
@@ -189,7 +182,7 @@ const Users = (): JSX.Element => {
         title="Delete"
         description="Are you sure you want to delete this user?"
         open={removeDialog}
-        cancelAction={closeRemoveDialog}
+        cancelAction={() => deleteDialogToggle(false, null)}
         confirmAction={handleDeleteUser}
       />
     </Fragment>

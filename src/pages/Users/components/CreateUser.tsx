@@ -8,15 +8,12 @@ import TcoButton from "../../../shared/components/Button";
 import TcoInput from "../../../shared/components/Input";
 import { AppDispatch } from "../../../store";
 import { createUser } from "../../../store/slicers/users";
+import { IUserForm } from "../../../store/models/interfaces/user";
 interface ICreateUserProps {
   getData: () => void;
   handleCloseDialog: () => void;
 }
 
-interface IUserForm {
-  job: string;
-  name: string;
-}
 
 const CreateUser = ({ getData, handleCloseDialog }: ICreateUserProps) => {
   const { enqueueSnackbar } = useSnackbar();

@@ -4,5 +4,13 @@ export interface IUser {
   last_name: string;
   email: string;
   avatar: string;
-  id: number
+  id: number,
+  index: number
 }
+
+
+export interface IUserForm {
+  job: string;
+  name: string;
+}
+

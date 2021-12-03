@@ -92,10 +92,10 @@ const TcoTable = ({
             <TableRow key={row.id}>{generateSingleRow(row)}</TableRow>
           ))}
         </TableBody>
-        {paginationDetails !== null && paginationDetails?.total > paginationDetails.per_page && (
+        {paginationDetails !== null && paginationDetails?.total > paginationDetails?.per_page && (
           <TablePagination
             count={paginationDetails?.total_pages}
-            page={paginationDetails.page}
+            page={paginationDetails?.page}
             handleChange={handleChangePage}
           />
         )}

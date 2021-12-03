@@ -6,8 +6,6 @@ import { makeStyles } from "@mui/styles";
 
 import { Box } from "@mui/system";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import { useState } from "react";
-
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {

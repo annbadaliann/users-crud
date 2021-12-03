@@ -31,14 +31,14 @@ const Login = (): JSX.Element => {
 
   const onSubmit = useCallback(
     async (data: IUser) => {
-      const { meta, payload } = await dispatch(loginUser(data));
+      const { meta, payload } = await dispatch(loginUser(data)) as any;
 
       if (meta.requestStatus !== "fulfilled") {
         enqueueSnackbar("Email or password is wrong", { variant: "error" });
         return;
       }
       
-      localStorage.setItem("token", payload.token);
+      localStorage.setItem("token", payload?.token);
       history.push("/users");
     },
     [dispatch, enqueueSnackbar, history]
